@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papyrus — Animated Wallpapers for COSMIC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #07080d;
+      --surface:  #0d0f18;
+      --border:   rgba(120, 160, 255, 0.12);
+      --glow:     #4a7aff;
+      --glow2:    #9b6dff;
+      --accent:   #7eb8ff;
+      --text:     #c8d8f0;
+      --muted:    #5a6880;
+      --gold:     #c8a96e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── noise grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.6;
+    }
+
+    /* ── animated bg nebula ── */
+    .nebula {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .nebula::before {
+      content: '';
+      position: absolute;
+      width: 800px; height: 800px;
+      top: -200px; left: -200px;
+      background: radial-gradient(ellipse, rgba(74,122,255,0.08) 0%, transparent 70%);
+      animation: drift1 20s ease-in-out infinite alternate;
+    }
+    .nebula::after {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      bottom: -100px; right: -100px;
+      background: radial-gradient(ellipse, rgba(155,109,255,0.07) 0%, transparent 70%);
+      animation: drift2 25s ease-in-out infinite alternate;
+    }
+    @keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(100px,80px) scale(1.15); } }
+    @keyframes drift2 { from { transform: translate(0,0) scale(1); } to { transform: translate(-80px,-60px) scale(1.2); } }
+
+    /* ── nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(7,8,13,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── sections ── */
+    section { position: relative; z-index: 1; }
+
+    /* ── hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .hero-scroll-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    .hero-icon {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 0 60px rgba(74,122,255,0.3), 0 0 120px rgba(155,109,255,0.15);
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.4s forwards;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      line-height: 1;
+      background: linear-gradient(135deg, #e8d5a0 0%, #7eb8ff 50%, #c8a96e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.6s forwards;
+    }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      color: var(--muted);
+      font-style: italic;
+      font-weight: 300;
+      max-width: 500px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.8s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1s forwards;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2rem;
+      background: linear-gradient(135deg, var(--glow), var(--glow2));
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      transition: all 0.25s;
+      box-shadow: 0 4px 30px rgba(74,122,255,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(74,122,255,0.5);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2rem;
+      background: transparent;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 4px;
+      border: 1px solid rgba(126,184,255,0.3);
+      letter-spacing: 0.05em;
+      transition: all 0.25s;
+    }
+    .btn-secondary:hover {
+      background: rgba(126,184,255,0.06);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ── install block ── */
+    .install-block {
+      margin-top: 4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      max-width: 600px;
+      width: 100%;
+      text-align: left;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 1.2s forwards;
+    }
+    .install-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .install-cmd {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--accent);
+      word-break: break-all;
+    }
+    .copy-btn {
+      float: right;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 1rem;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0 3rem;
+      margin: 2rem 0;
+      opacity: 0.3;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+    .divider-icon { color: var(--gold); font-size: 1.2rem; }
+
+    /* ── features ── */
+    .features {
+      padding: 6rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--gold);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 700;
+      color: #e8e8f0;
+      margin-bottom: 3.5rem;
+      line-height: 1.2;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .feature-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      transition: background 0.25s;
+      position: relative;
+    }
+    .feature-card:hover { background: #111420; }
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--glow), var(--glow2));
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+    .feature-card:hover::after { opacity: 1; }
+
+    .feature-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .feature-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #e8e8f0;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.05em;
+    }
+
+    .feature-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ── how it works ── */
+    .how {
+      padding: 6rem 3rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 3rem;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      left: 1.5rem;
+      top: 2rem;
+      bottom: 2rem;
+      width: 1px;
+      background: linear-gradient(180deg, var(--glow), var(--glow2), transparent);
+      opacity: 0.4;
+    }
+
+    .step {
+      display: flex;
+      gap: 2rem;
+      padding: 1.5rem 0;
+    }
+
+    .step-num {
+      flex-shrink: 0;
+      width: 3rem; height: 3rem;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gold);
+      position: relative;
+      z-index: 1;
+    }
+
+    .step-content { padding-top: 0.4rem; }
+    .step-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: #e8e8f0;
+      margin-bottom: 0.3rem;
+    }
+    .step-desc { color: var(--muted); font-size: 0.95rem; }
+
+    /* ── wallpaper sources ── */
+    .sources {
+      padding: 6rem 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .sources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+
+    .source-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.5rem;
+      text-decoration: none;
+      transition: all 0.25s;
+      display: block;
+    }
+    .source-card:hover {
+      border-color: rgba(126,184,255,0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(74,122,255,0.15);
+    }
+    .source-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .source-desc { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 8rem 3rem;
+      text-align: center;
+      position: relative;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(74,122,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      color: #e8e8f0;
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+    .cta p {
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 2.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* ── footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+    }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy {
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .features, .how, .sources, .cta { padding: 4rem 1.5rem; }
+      footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="nebula"></div>
+
+<nav>
+  <a href="#" class="nav-logo">PAPYRUS</a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#wallpapers">Wallpapers</a></li>
+    <li><a href="https://github.com/PSGtatitos/papyrus">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-scroll-badge">✦ &nbsp; for Pop!_OS COSMIC &nbsp; ✦</span>
+  <img src="assets/icon.png" alt="Papyrus" class="hero-icon">
+  <h1>Papyrus</h1>
+  <p class="hero-sub">Animated wallpapers that breathe life into your desktop — and color into your theme.</p>
+  <div class="hero-actions">
+    <a href="https://github.com/PSGtatitos/papyrus" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+    <a href="#install" class="btn-secondary">
+      Quick Install ↓
+    </a>
+  </div>
+
+  <div class="install-block" id="install">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+      <span class="install-label">Quick Install</span>
+      <button class="copy-btn" onclick="copyInstall(this)">copy</button>
+    </div>
+    <code class="install-cmd">curl -fsSL https://raw.githubusercontent.com/PSGtatitos/papyrus/main/install.sh | bash</code>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-icon">✦</span></div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <span class="section-label reveal">What it does</span>
+  <h2 class="section-title reveal">Everything your desktop deserves.</h2>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <span class="feature-icon">🎬</span>
+      <div class="feature-title">Live Animated Wallpapers</div>
+      <p class="feature-desc">Set any MP4, WebM, MKV, AVI or MOV file as a live looping wallpaper via mpvpaper. No Wallpaper Engine required.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🎨</span>
+      <div class="feature-title">Auto-Theme Your DE</div>
+      <p class="feature-desc">Papyrus extracts the most vibrant color from your wallpaper and applies it as your COSMIC accent color — live, no restart.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🌙</span>
+      <div class="feature-title">Smart Dark/Light Mode</div>
+      <p class="feature-desc">Detects average brightness from your wallpaper and switches COSMIC between dark and light mode automatically.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🖼️</span>
+      <div class="feature-title">Thumbnail Previews</div>
+      <p class="feature-desc">Video thumbnails are auto-generated with ffmpeg so you can browse your collection visually before applying.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🔁</span>
+      <div class="feature-title">Start on Login</div>
+      <p class="feature-desc">One toggle persists your wallpaper across reboots by writing an autostart desktop entry automatically.</p>
+    </div>
+    <div class="feature-card reveal">
+      <span class="feature-icon">🚫</span>
+      <div class="feature-title">Zero Telemetry</div>
+      <p class="feature-desc">No accounts, no cloud, no analytics. Config is a plain JSON file at ~/.config/papyrus/config.json. That's it.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-icon">✦</span></div>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <span class="section-label reveal">Under the hood</span>
+  <h2 class="section-title reveal">How Papyrus works.</h2>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">I</div>
+      <div class="step-content">
+        <div class="step-title">You pick a wallpaper</div>
+        <p class="step-desc">Click any video thumbnail in the Papyrus grid. The app kills any running mpvpaper instance and starts a new one with loop enabled on your Wayland output.</p>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">II</div>
+      <div class="step-content">
+        <div class="step-title">Colors are extracted</div>
+        <p class="step-desc">Pillow samples every pixel in the thumbnail, scores each by vibrancy (saturation × brightness), and picks the most vivid color as your new accent.</p>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">III</div>
+      <div class="step-content">
+        <div class="step-title">COSMIC theme updates live</div>
+        <p class="step-desc">Papyrus writes the color directly to COSMIC's compiled theme config in RON format. COSMIC watches these files via inotify and applies changes instantly — no logout needed.</p>
+      </div>
+    </div>
+    <div class="step reveal">
+      <div class="step-num">IV</div>
+      <div class="step-content">
+        <div class="step-title">Your desktop breathes</div>
+        <p class="step-desc">Panel, dock, windows, and accent colors all shift to match the mood of your wallpaper. Dark wallpaper → dark mode. Bright wallpaper → light mode.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-icon">✦</span></div>
+
+<!-- WALLPAPER SOURCES -->
+<section class="sources" id="wallpapers">
+  <span class="section-label reveal">Find your wallpaper</span>
+  <h2 class="section-title reveal">Where to look.</h2>
+  <div class="sources-grid">
+    <a href="https://moewalls.com" target="_blank" class="source-card reveal">
+      <div class="source-name">MoeWalls</div>
+      <p class="source-desc">Anime & gaming wallpapers, optimized WebM/MP4, free to download.</p>
+    </a>
+    <a href="https://motionbgs.com" target="_blank" class="source-card reveal">
+      <div class="source-name">MotionBGs</div>
+      <p class="source-desc">8,000+ animated wallpapers in 4K. Huge variety of styles.</p>
+    </a>
+    <a href="https://wallsflow.com" target="_blank" class="source-card reveal">
+      <div class="source-name">Wallsflow</div>
+      <p class="source-desc">Growing free collection. Cars, games, anime, nature, abstract.</p>
+    </a>
+    <a href="https://pexels.com/videos" target="_blank" class="source-card reveal">
+      <div class="source-name">Pexels Videos</div>
+      <p class="source-desc">Thousands of cinematic 4K clips. Free, no attribution required.</p>
+    </a>
+  </div>
+</section>
+
+<div class="divider"><span class="divider-icon">✦</span></div>
+
+<!-- CTA -->
+<section class="cta">
+  <h2 class="reveal">Ready to bring your desktop to life?</h2>
+  <p class="reveal">One command. No accounts. No nonsense.</p>
+  <div class="hero-actions reveal">
+    <a href="https://github.com/PSGtatitos/papyrus" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      Get Papyrus
+    </a>
+    <a href="https://github.com/PSGtatitos/papyrus/issues" class="btn-secondary">Report an Issue</a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">PAPYRUS</span>
+  <ul class="footer-links">
+    <li><a href="https://github.com/PSGtatitos/papyrus">GitHub</a></li>
+    <li><a href="https://github.com/PSGtatitos/papyrus/issues">Issues</a></li>
+    <li><a href="https://github.com/PSGtatitos/papyrus/blob/main/LICENSE">GPL-3.0</a></li>
+  </ul>
+  <span class="footer-copy">Made for the COSMIC community</span>
+</footer>
+
+<script>
+  // copy install command
+  function copyInstall(btn) {
+    const cmd = document.querySelector('.install-cmd').textContent;
+    navigator.clipboard.writeText(cmd).then(() => {
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 2000);
+    });
+  }
+
+  // scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
