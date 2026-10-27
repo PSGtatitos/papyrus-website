@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Papyrus — Animated Wallpapers for COSMIC</title>
-  <meta name="description" content="Animated wallpapers for COSMIC desktop. Playlist rotation, auto-theming, dark/light mode, folder picker, self-update, zero telemetry. One command to install.">
-  <meta property="og:title" content="Papyrus — Animated Wallpapers for COSMIC">
-  <meta property="og:description" content="Animated wallpapers for COSMIC desktop. Playlist rotation, auto-theming, dark/light mode, folder picker, self-update, zero telemetry.">
+  <title>Papyrus 2.0 — Wallpapers that fit your desktop</title>
+  <meta name="description" content="Papyrus 2.0 brings animated and static wallpapers, per-monitor control, smart auto-pause, and a searchable library to Wayland desktops.">
+  <meta property="og:title" content="Papyrus 2.0 — Wallpapers that fit your desktop">
+  <meta property="og:description" content="Animated and static wallpapers, per-monitor control, smart auto-pause, and a searchable library for Wayland desktops.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="assets/icon.png">
-  <meta name="theme-color" content="#05060a">
+  <meta name="theme-color" content="#15181f">
   <link rel="icon" href="assets/icon.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -762,6 +762,124 @@
       opacity: 0.6;
     }
 
+    /* Papyrus 2.0 refresh */
+    :root { --bg: #080b12; --surface: #101722; --accent: #a8c9ff; --muted: #92a0b5; --gold: #a9c6ec; }
+    body { background: #080b12; }
+    nav { border-color: rgba(174, 202, 245, .14); background: rgba(8, 11, 18, .78); }
+    .hero { min-height: min(900px, 100svh); padding-top: 8rem; }
+    .hero-scroll-badge { color: #b8c9df; border: 1px solid rgba(174,202,245,.2); border-radius: 999px; padding: .45rem .9rem; letter-spacing: .12em; }
+    .hero-scroll-badge::before, .hero-scroll-badge::after { content: none; }
+    h1 { letter-spacing: -.025em; }
+    .hero-sub { color: #b0bdcf; font-style: normal; font-size: clamp(1.15rem, 2vw, 1.4rem); max-width: 600px; }
+    .features-grid { gap: 12px; background: transparent; border: 0; overflow: visible; }
+    .feature-card { border: 1px solid rgba(174,202,245,.12); border-radius: 14px; background: linear-gradient(145deg, rgba(20,29,43,.92), rgba(12,17,27,.88)); }
+    .feature-title { font-family: 'Crimson Pro', Georgia, serif; font-size: 1.25rem; letter-spacing: 0; }
+    .feature-desc, .step-desc, .source-desc { color: #a5b2c5; }
+    .section-label { color: #a9c6ec; }
+    .section-title { font-size: clamp(2rem, 4vw, 3.1rem); letter-spacing: -.02em; }
+    .install-block { background: rgba(12,17,27,.88); border-color: rgba(174,202,245,.15); }
+    .v2-section { max-width: 1100px; padding: 3rem; margin: 0 auto; }
+    .release-panel { display: grid; grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr); gap: 2.5rem; align-items: center; padding: clamp(1.5rem, 4vw, 3rem); border: 1px solid rgba(174,202,245,.18); border-radius: 22px; background: linear-gradient(125deg, rgba(25,38,58,.92), rgba(13,19,30,.88) 60%, rgba(26,27,47,.84)); box-shadow: 0 30px 100px rgba(0,0,0,.25); }
+    .release-copy h2 { font-family: 'Cinzel', serif; font-size: clamp(1.8rem, 3.5vw, 2.7rem); line-height: 1.15; color: #eef4ff; margin: .75rem 0; }
+    .release-copy p { color: #aab8cc; max-width: 38ch; }
+    .version-pill { display: inline-flex; padding: .35rem .7rem; border: 1px solid rgba(174,202,245,.27); border-radius: 999px; color: #cfe0fa; font: .68rem 'JetBrains Mono', monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .release-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+    .release-item { min-height: 94px; padding: 1rem; border: 1px solid rgba(174,202,245,.12); border-radius: 12px; background: rgba(7,11,18,.45); }
+    .release-item strong { display: block; color: #e7effb; font-size: 1.02rem; margin-bottom: .2rem; }
+    .release-item span { color: #9eacc0; font-size: .84rem; line-height: 1.35; }
+    .compat-note { margin-top: 1.2rem; color: #9eacc0; font-size: .86rem; }
+    .compat-note strong { color: #d7e5f8; }
+    .source-card { border-color: rgba(174,202,245,.12); background: rgba(16,23,34,.72); }
+    a:focus-visible, button:focus-visible { outline: 2px solid #b8d4ff; outline-offset: 4px; }
+    @media (max-width: 760px) { .v2-section { padding: 2rem 1.25rem; } .release-panel { grid-template-columns: 1fr; gap: 1.5rem; } }
+    @media (max-width: 460px) { .release-list { grid-template-columns: 1fr; } .hero-actions .btn { justify-content: center; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+    /* Complete visual system based on the Papyrus 2.0 mark */
+    :root { --bg:#15181f; --surface:#1c2028; --surface2:rgba(28,32,40,.78); --border:rgba(98,226,207,.16); --glow:#59ddc9; --glow2:#36b9a8; --glow3:#96f1df; --accent:#69e4cf; --text:#f2f5f6; --muted:#9ba7b1; --gold:#69e4cf; --gold-light:#b8f8eb; }
+    html { scroll-padding-top: 6rem; }
+    body { background:var(--bg); color:var(--text); font:16px/1.65 'DM Sans',sans-serif; }
+    body::after { display:none; }
+    #stars,.aurora { display:none; }
+    #scroll-progress { height:3px; background:linear-gradient(90deg,#46c9b8,#8bf2de); }
+    nav { top:1.1rem; width:min(92vw,1180px); padding:.65rem .75rem .65rem 1rem; background:rgba(21,24,31,.86); border:1px solid rgba(255,255,255,.09); border-radius:14px; box-shadow:0 12px 42px rgba(0,0,0,.25); }
+    .nav-logo { display:flex; align-items:center; gap:.65rem; color:#f2f5f6; font:700 .95rem 'Manrope',sans-serif; letter-spacing:.04em; }
+    .nav-logo::after { display:none; }
+    .nav-mark { width:34px;height:34px;object-fit:cover;border-radius:9px; }
+    .nav-links a { color:#a8b2bb; font:500 .82rem 'DM Sans',sans-serif; letter-spacing:0; padding:.55rem .85rem; }
+    .nav-links a:hover { color:#fff; background:rgba(255,255,255,.06); }
+    .nav-links a:last-child { color:#10201e; background:var(--accent); border:0; border-radius:9px; font-weight:700; }
+    .nav-links a:last-child:hover { background:#8ff0dd; }
+    .hero { min-height:820px; min-height:min(920px,100svh); max-width:1240px; margin:auto; padding:9rem 2rem 5.5rem; display:grid; grid-template-columns:minmax(0,.9fr) minmax(420px,1.1fr); grid-template-rows:auto auto auto auto auto 1fr; align-items:center; justify-items:start; gap:0 4rem; text-align:left; }
+    .hero-glow,.deco-ring { display:none; }
+    .hero-scroll-badge { grid-column:1;grid-row:1; margin:0 0 1.15rem; padding:.42rem .8rem; border-radius:999px; border:1px solid rgba(105,228,207,.25); color:var(--accent); background:rgba(105,228,207,.07); font:600 .72rem 'JetBrains Mono',monospace; letter-spacing:.08em; opacity:0;animation:fadeUp .65s ease .12s forwards; }
+    .hero-scroll-badge::before,.hero-scroll-badge::after { content:none; }
+    .hero-icon { grid-column:1;grid-row:2;width:72px;height:72px;margin:0 0 1rem;border-radius:19px;box-shadow:0 12px 36px rgba(0,0,0,.3); opacity:0;animation:fadeUp .65s ease .2s forwards; }
+    h1 { grid-column:1;grid-row:3; margin:0 0 .9rem; font:800 clamp(3.5rem,7vw,6.2rem)/.98 'Manrope',sans-serif; letter-spacing:-.075em; background:linear-gradient(115deg,#f5f7f8 45%,#74e7d2 100%);background-clip:text;-webkit-background-clip:text;filter:none;opacity:0;animation:fadeUp .65s ease .28s forwards; }
+    .hero-sub { grid-column:1;grid-row:4; max-width:510px;margin:0 0 1.7rem; color:#aab5bf;font:400 clamp(1.05rem,1.8vw,1.2rem)/1.65 'DM Sans',sans-serif; }
+    .hero-actions { grid-column:1;grid-row:5; justify-content:flex-start; gap:.7rem; }
+    .btn { border-radius:10px;padding:.8rem 1.2rem;font:700 .87rem 'DM Sans',sans-serif;letter-spacing:0;transition:transform .2s,background .2s,border-color .2s; }
+    .btn-primary { color:#10201e;background:linear-gradient(135deg,#82efda,#53d4c1);box-shadow:0 8px 30px rgba(76,214,193,.18); }
+    .btn-primary::before { display:none; }
+    .btn-primary:hover { transform:translateY(-2px);background:#a1f6e5;box-shadow:0 12px 34px rgba(76,214,193,.24); }
+    .btn-secondary { color:#e1e8e9;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14);backdrop-filter:none; }
+    .btn-secondary:hover { color:#fff; transform:translateY(-2px);background:rgba(255,255,255,.08);border-color:rgba(105,228,207,.4);box-shadow:none; }
+    .install-block { grid-column:1;grid-row:6;align-self:start;max-width:540px;margin:1.4rem 0 0;padding:1rem 1.1rem;background:#1b2028;border:1px solid rgba(255,255,255,.09);border-radius:12px;box-shadow:0 16px 44px rgba(0,0,0,.16); }
+    .install-block::before { display:none; }
+    .install-label { color:#7ce8d4;font-size:.62rem;letter-spacing:.12em; }
+    .install-cmd { color:#dbe5e5;font-size:.76rem; }
+    .copy-btn { color:#c3d0d0;border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04); }
+    .install-block > div:last-child { border-color:rgba(255,255,255,.08)!important;gap:.4rem!important; }
+    .install-block > div:last-child span { font:500 .65rem 'DM Sans',sans-serif!important;color:#93a0aa!important; }
+    .hero-showcase { grid-column:2;grid-row:1 / 7;align-self:center;justify-self:stretch;position:relative;min-height:440px;padding:1rem;border-radius:24px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(145deg,#222831,#191d25);box-shadow:0 40px 100px rgba(0,0,0,.36),inset 0 1px rgba(255,255,255,.06);transform:perspective(1300px) rotateY(-5deg) rotateX(2deg); }
+    .showcase-top { display:flex;align-items:center;justify-content:space-between;padding:.25rem .2rem 1rem;color:#e5ecec;font:600 .75rem 'DM Sans',sans-serif; }
+    .showcase-dots { display:flex;gap:5px; }.showcase-dots i { width:7px;height:7px;border-radius:50%;background:#59626b; }
+    .showcase-search { border:1px solid rgba(255,255,255,.08);background:rgba(5,8,12,.22);border-radius:7px;padding:.36rem .6rem;color:#8e9ba3;font-size:.65rem; }
+    .showcase-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem; }
+    .wall-card { aspect-ratio:1.05;border-radius:11px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#313b3f; }
+    .wall-card::before { content:'';position:absolute;inset:0;background:linear-gradient(150deg,transparent 30%,rgba(0,0,0,.65)); }
+    .wall-card::after { content:attr(data-name);position:absolute;left:.65rem;bottom:.45rem;color:#f4f7f7;font-size:.67rem;font-weight:600; }
+    .wall-card:nth-child(1) { background:radial-gradient(ellipse at 70% 30%,#f4b46f,transparent 20%),linear-gradient(155deg,#397b79,#18373f 52%,#101820); }
+    .wall-card:nth-child(2) { background:radial-gradient(ellipse at 40% 50%,#eca48a,transparent 17%),linear-gradient(160deg,#32355f,#926487 54%,#1b2230); }
+    .wall-card:nth-child(3) { background:radial-gradient(ellipse at 60% 40%,#a4e7c7,transparent 19%),linear-gradient(155deg,#466c65,#203e46 55%,#1b242a); }
+    .wall-card:nth-child(4) { background:radial-gradient(ellipse at 50% 35%,#f5cf83,transparent 12%),linear-gradient(160deg,#526a75,#283945 55%,#151d27); }
+    .wall-card:nth-child(5) { background:radial-gradient(ellipse at 45% 45%,#bda6f5,transparent 16%),linear-gradient(145deg,#46416f,#24273f 58%,#171b2c); }
+    .wall-card:nth-child(6) { background:radial-gradient(ellipse at 58% 35%,#f5aa8b,transparent 14%),linear-gradient(150deg,#6b5548,#463b40 50%,#192127); }
+    .showcase-bottom { display:flex;align-items:center;justify-content:space-between;padding:.9rem .2rem .1rem;color:#a4b0b6;font-size:.68rem; }
+    .showcase-status { color:#71e3ce; }.showcase-status::before { content:'';display:inline-block;width:6px;height:6px;margin-right:.4rem;border-radius:50%;background:#68e2cc;box-shadow:0 0 10px #68e2cc; }
+    .divider { max-width:1180px;margin:0 auto;opacity:.7; }.divider-line { background:linear-gradient(90deg,transparent,rgba(105,228,207,.16),transparent); }.divider-icon { color:#69e4cf; }
+    .features,.how,.sources { max-width:1180px;padding:6rem 2rem;margin:auto; }
+    .section-label { color:#69e4cf;font:600 .7rem 'JetBrains Mono',monospace;letter-spacing:.13em; }
+    .section-title { max-width:760px;margin:0 0 2.2rem;color:#f1f5f5;font:700 clamp(2rem,4.5vw,3.5rem)/1.12 'Manrope',sans-serif;letter-spacing:-.055em; }
+    .features-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:transparent;border:0;overflow:visible; }
+    .feature-card { min-height:220px;padding:1.6rem;background:linear-gradient(145deg,rgba(31,37,46,.95),rgba(25,30,38,.94));border:1px solid rgba(255,255,255,.08);border-radius:15px;backdrop-filter:none;transition:transform .25s,border-color .25s,background .25s; }
+    .feature-card:hover { background:#232a32;border-color:rgba(105,228,207,.32);transform:translateY(-3px); }
+    .feature-card::before,.feature-card::after,.feature-card-glow { display:none; }
+    .feature-icon { width:40px;height:40px;display:grid;place-items:center;margin-bottom:1.25rem;border-radius:12px;background:rgba(105,228,207,.09);font-size:1.25rem; }
+    .feature-title { color:#f2f5f5;font:700 1.1rem 'Manrope',sans-serif;letter-spacing:-.02em; }
+    .feature-desc,.step-desc,.source-desc { color:#a0acb6;font:400 .94rem/1.65 'DM Sans',sans-serif; }
+    .v2-section { max-width:1180px;padding:2.5rem 2rem;margin:auto; }
+    .release-panel { grid-template-columns:.78fr 1.22fr;padding:clamp(1.5rem,4vw,3rem);border:1px solid rgba(105,228,207,.18);border-radius:20px;background:linear-gradient(135deg,#20272f,#1a2028);box-shadow:0 30px 90px rgba(0,0,0,.2); }
+    .release-copy h2,.cta h2 { color:#f3f6f6;font:750 clamp(2rem,4vw,3.2rem)/1.08 'Manrope',sans-serif;letter-spacing:-.055em; }
+    .release-copy p,.compat-note { color:#a4b0b9;font:400 .96rem/1.65 'DM Sans',sans-serif; }
+    .version-pill { color:#7ce8d4;border-color:rgba(105,228,207,.26);background:rgba(105,228,207,.06);font-size:.65rem; }
+    .release-list { gap:.6rem; }.release-item { min-height:100px;padding:1rem;background:rgba(12,16,22,.35);border-color:rgba(255,255,255,.08);border-radius:12px; }
+    .release-item strong { color:#edf4f3;font:700 .95rem 'Manrope',sans-serif; }.release-item span { color:#9eabb4;font:400 .82rem/1.5 'DM Sans',sans-serif; }
+    .steps { margin-top:2rem; }.steps::before { background:linear-gradient(var(--accent),rgba(105,228,207,.05));opacity:.25; }
+    .step-num { color:#75e7d3;background:#20262e;border-color:rgba(105,228,207,.22);font-family:'Manrope',sans-serif; }
+    .step-title { color:#f0f4f4;font:700 1.05rem 'Manrope',sans-serif;letter-spacing:-.02em; }
+    .sources-grid { grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem; }
+    .source-card { padding:1.35rem;background:#1c222a;border:1px solid rgba(255,255,255,.08);border-radius:13px;backdrop-filter:none; }
+    .source-card:hover { border-color:rgba(105,228,207,.32);background:#232a32;box-shadow:0 14px 40px rgba(0,0,0,.18); }
+    .source-name { color:#7ce8d4;font:700 1rem 'Manrope',sans-serif; }.source-desc { font-size:.86rem; }
+    .cta { padding:7rem 2rem;text-align:center; }.cta::before { background:radial-gradient(ellipse at 50% 80%,rgba(72,205,184,.09),transparent 55%); }
+    .cta h2 { max-width:780px;margin:0 auto .8rem; }.cta p { color:#a4b0b9;font:400 1.05rem 'DM Sans',sans-serif; }.cta .hero-actions { justify-content:center; }
+    footer { padding:2rem max(2rem,calc((100vw - 1180px)/2));border-color:rgba(255,255,255,.08);background:#12151b; }
+    .footer-logo { color:#79e6d2;font:700 .88rem 'Manrope',sans-serif;letter-spacing:.08em; }.footer-links a,.footer-copy { color:#89959f;font-family:'DM Sans',sans-serif; }
+    @media(max-width:900px) { .hero { grid-template-columns:1fr minmax(300px,.9fr);gap:0 2rem;padding-inline:1.5rem; }.features-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.sources-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.release-panel { grid-template-columns:1fr; } }
+    @media(max-width:700px) { nav { top:.65rem;width:calc(100% - 1.25rem); }.nav-toggle { display:block;color:#f2f5f5; }.nav-links { top:calc(100% + 8px);background:#1b2028;border:1px solid rgba(255,255,255,.1); }.nav-links a:last-child { background:transparent;color:#69e4cf; }.hero { min-height:0;padding:8rem 1.25rem 4rem;display:flex;align-items:flex-start;gap:0;text-align:left; }.hero-icon { width:58px;height:58px;margin:0 0 1rem; }.hero-scroll-badge { margin-bottom:1rem; }.hero h1 { margin-bottom:.8rem;font-size:clamp(3.25rem,15vw,5rem); }.hero-sub { margin-bottom:1.4rem; }.hero-actions { flex-wrap:wrap; }.install-block { margin-top:1.2rem;max-width:none; }.hero-showcase { width:100%;min-height:auto;margin-top:2.2rem;padding:.75rem;transform:none; }.wall-card { aspect-ratio:1; }.features,.how,.sources,.v2-section { padding:4rem 1.25rem; }.section-title { margin-bottom:1.6rem; }.feature-card { min-height:0;padding:1.35rem; }.feature-icon { margin-bottom:.9rem; }.release-panel { gap:1.4rem; }.release-list { grid-template-columns:repeat(2,minmax(0,1fr)); }.cta { padding:5rem 1.25rem; }footer { padding:2rem 1.25rem;flex-direction:column;align-items:flex-start; } }
+    @media(max-width:440px) { .features-grid,.release-list,.sources-grid { grid-template-columns:1fr; }.feature-card { min-height:0; }.showcase-top { font-size:.68rem; }.showcase-search { max-width:115px;overflow:hidden;white-space:nowrap; } }
+
     /* ── animations ── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
@@ -828,9 +946,10 @@
 </div>
 
 <nav>
-  <a href="#" class="nav-logo">PAPYRUS</a>
+  <a href="#" class="nav-logo"><img src="assets/icon.png" alt="" class="nav-mark">PAPYRUS</a>
   <button class="nav-toggle" aria-label="Toggle navigation">☰</button>
   <ul class="nav-links" id="nav-links">
+    <li><a href="#whats-new">What's new</a></li>
     <li><a href="#features">Features</a></li>
     <li><a href="#how">How it works</a></li>
     <li><a href="#wallpapers">Wallpapers</a></li>
@@ -844,17 +963,17 @@
   <div class="deco-ring"></div>
   <div class="deco-ring"></div>
 
-  <span class="hero-scroll-badge">for Pop!_OS COSMIC</span>
+  <span class="hero-scroll-badge">Version 2.0 · Built for Wayland</span>
   <img src="assets/icon.png" alt="Papyrus app icon" class="hero-icon">
   <h1>Papyrus</h1>
-  <p class="hero-sub">Animated wallpapers that breathe life into your desktop — and color into your theme.</p>
+  <p class="hero-sub">Make every screen feel like yours. Set animated or still wallpapers, tune each monitor, and let your desktop take a breather when you need it.</p>
   <div class="hero-actions">
     <a href="https://github.com/PSGtatitos/papyrus" class="btn btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      View on GitHub
+      Explore Papyrus
     </a>
     <a href="#install" class="btn btn-secondary">
-      Quick Install ↓
+      Install Papyrus ↓
     </a>
   </div>
 
@@ -865,8 +984,35 @@
     </div>
     <code class="install-cmd">curl -fsSL https://raw.githubusercontent.com/PSGtatitos/papyrus/main/install.sh | bash</code>
     <div style="display:flex; gap:1.25rem; flex-wrap:wrap; margin-top:0.7rem; padding-top:0.7rem; border-top:1px solid rgba(100,150,255,0.06);">
-      <span style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); letter-spacing:0.02em;">Supports Pop, Ubuntu, Debian, Arch, Fedora, openSUSE & more</span>
-      <span style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); letter-spacing:0.02em;">Flatpak version is no longer maintained or supported</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); letter-spacing:0.02em;">Universal installer for Pop, Ubuntu, Debian, Fedora & openSUSE · Arch via AUR</span>
+      <span style="font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); letter-spacing:0.02em;">Requires a Wayland compositor with wlr-layer-shell · Flatpak discontinued</span>
+    </div>
+  </div>
+  <div class="hero-showcase" aria-label="Illustration of the Papyrus wallpaper library">
+    <div class="showcase-top"><span class="showcase-dots"><i></i><i></i><i></i></span><span>Wallpaper library</span><span class="showcase-search">⌕ &nbsp; Search wallpapers</span></div>
+    <div class="showcase-grid">
+      <div class="wall-card" data-name="Golden hour"></div><div class="wall-card" data-name="Distant worlds"></div><div class="wall-card" data-name="Misty forest"></div>
+      <div class="wall-card" data-name="Quiet peaks"></div><div class="wall-card" data-name="Soft orbit"></div><div class="wall-card" data-name="Afterglow"></div>
+    </div>
+    <div class="showcase-bottom"><span>6 wallpapers · 2 displays</span><span class="showcase-status">Playback active</span></div>
+  </div>
+</section>
+
+<section class="v2-section" id="whats-new" aria-labelledby="release-title">
+  <div class="release-panel">
+    <div class="release-copy">
+      <span class="version-pill">The 2.0 release</span>
+      <h2 id="release-title">A wallpaper setup that thinks ahead.</h2>
+      <p>More control over every display, a library that’s easier to browse, and playback that knows when to pause.</p>
+      <p class="compat-note"><strong>Made for Wayland.</strong> Animated playback needs <code>wlr-layer-shell</code>. COSMIC-only auto-theming matches your accent color and light/dark mode to the wallpaper.</p>
+    </div>
+    <div class="release-list" aria-label="What's new in Papyrus 2.0">
+      <div class="release-item"><strong>Smart auto-pause</strong><span>Pause wallpaper playback when a window covers the display or an app goes fullscreen.</span></div>
+      <div class="release-item"><strong>Every display, your way</strong><span>Choose a different wallpaper per monitor and set Fit, Fill, or Stretch independently.</span></div>
+      <div class="release-item"><strong>Images, too</strong><span>Use still wallpapers alongside video: JPEG, PNG, WebP, and BMP.</span></div>
+      <div class="release-item"><strong>Find it faster</strong><span>Search, filter, and sort your wallpaper library.</span></div>
+      <div class="release-item"><strong>Your own backdrop</strong><span>Choose the image shown behind Papyrus’s frosted-glass panels.</span></div>
+      <div class="release-item"><strong>Fedora COPR</strong><span>A new package source joins the universal installer, .deb, and AUR.</span></div>
     </div>
   </div>
 </section>
@@ -879,14 +1025,14 @@
 
 <!-- FEATURES -->
 <section class="features" id="features">
-  <span class="section-label reveal">What it does</span>
-  <h2 class="section-title reveal">Everything your desktop deserves.</h2>
+  <span class="section-label reveal">Your wallpaper setup</span>
+  <h2 class="section-title reveal">A little more life. A lot more control.</h2>
   <div class="features-grid">
     <div class="feature-card reveal" data-tilt>
       <div class="feature-card-glow"></div>
       <span class="feature-icon">🎬</span>
-      <div class="feature-title">Live Animated Wallpapers</div>
-      <p class="feature-desc">Set any MP4, WebM, MKV, AVI or MOV file as a live looping wallpaper via mpvpaper. No Wallpaper Engine required.</p>
+      <div class="feature-title">Video & image wallpapers</div>
+      <p class="feature-desc">Set MP4, WebM, MKV, AVI, MOV, JPEG, PNG, WebP, or BMP files as your Wayland wallpaper. No Wallpaper Engine required.</p>
     </div>
     <div class="feature-card reveal" data-tilt>
       <div class="feature-card-glow"></div>
@@ -903,26 +1049,44 @@
     <div class="feature-card reveal" data-tilt>
       <div class="feature-card-glow"></div>
       <span class="feature-icon">🎨</span>
-      <div class="feature-title">Auto-Theme Your DE</div>
-      <p class="feature-desc">Papyrus extracts the most vibrant color from your wallpaper and applies it as your COSMIC accent color — live, no restart.</p>
+      <div class="feature-title">Auto-theme COSMIC</div>
+      <p class="feature-desc">Extract a color from your wallpaper and apply it as your COSMIC accent, with no restart.</p>
     </div>
     <div class="feature-card reveal" data-tilt>
       <div class="feature-card-glow"></div>
       <span class="feature-icon">🌙</span>
-      <div class="feature-title">Smart Dark/Light Mode</div>
-      <p class="feature-desc">Detects average brightness from your wallpaper and switches COSMIC between dark and light mode automatically.</p>
+      <div class="feature-title">Automatic dark & light mode</div>
+      <p class="feature-desc">On COSMIC, match dark or light mode to the brightness of your wallpaper.</p>
     </div>
     <div class="feature-card reveal" data-tilt>
       <div class="feature-card-glow"></div>
       <span class="feature-icon">🖼️</span>
-      <div class="feature-title">Thumbnail Previews</div>
-      <p class="feature-desc">Video thumbnails are auto-generated with ffmpeg so you can browse your collection visually before applying.</p>
+      <div class="feature-title">Search, filter & sort</div>
+      <p class="feature-desc">Find the right wallpaper in your collection, with generated previews for quick visual browsing.</p>
     </div>
     <div class="feature-card reveal" data-tilt>
       <div class="feature-card-glow"></div>
       <span class="feature-icon">🔁</span>
       <div class="feature-title">Start on Login</div>
       <p class="feature-desc">One toggle persists your wallpaper across reboots by writing an autostart desktop entry automatically.</p>
+    </div>
+    <div class="feature-card reveal" data-tilt>
+      <div class="feature-card-glow"></div>
+      <span class="feature-icon">⏸️</span>
+      <div class="feature-title">Smart Auto-Pause</div>
+      <p class="feature-desc">Pause playback when a window covers the display or a fullscreen app is active, helping save resources.</p>
+    </div>
+    <div class="feature-card reveal" data-tilt>
+      <div class="feature-card-glow"></div>
+      <span class="feature-icon">🖥️</span>
+      <div class="feature-title">Per-Monitor Control</div>
+      <p class="feature-desc">Set a separate wallpaper on each screen and choose Fit, Fill, or Stretch for each output.</p>
+    </div>
+    <div class="feature-card reveal" data-tilt>
+      <div class="feature-card-glow"></div>
+      <span class="feature-icon">✨</span>
+      <div class="feature-title">Custom App Backdrop</div>
+      <p class="feature-desc">Pick the image shown behind Papyrus’s frosted-glass panels.</p>
     </div>
     <div class="feature-card reveal" data-tilt>
       <div class="feature-card-glow"></div>
@@ -1019,8 +1183,8 @@
 
 <!-- CTA -->
 <section class="cta">
-  <h2 class="reveal">Ready to bring your desktop to life?</h2>
-  <p class="reveal">One command. No accounts. No nonsense.</p>
+  <h2 class="reveal">Make room for a little motion.</h2>
+  <p class="reveal">Free, open source, and built for your Wayland desktop.</p>
   <div class="hero-actions reveal">
     <a href="https://github.com/PSGtatitos/papyrus" class="btn btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -1041,57 +1205,6 @@
 </footer>
 
   <script>
-  // starfield — 3 depth layers for parallax
-  (function() {
-    const container = document.getElementById('stars');
-    const layers = [
-      { count: 90, minSize: 0.5, maxSize: 1.2, minOpacity: 0.1, maxOpacity: 0.3, factor: 0.02, colors: ['#fff', '#d0dce8'] },
-      { count: 60, minSize: 0.8, maxSize: 1.8, minOpacity: 0.2, maxOpacity: 0.5, factor: 0.04, colors: ['#fff', '#7eb8ff', '#c8a96e'] },
-      { count: 30, minSize: 1.5, maxSize: 3, minOpacity: 0.3, maxOpacity: 0.7, factor: 0.07, colors: ['#fff', '#9b6dff', '#6dd4ff'] },
-    ];
-    const stars = [];
-    layers.forEach((layer) => {
-      for (let i = 0; i < layer.count; i++) {
-        const star = document.createElement('div');
-        const size = Math.random() * (layer.maxSize - layer.minSize) + layer.minSize;
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const delay = Math.random() * 4;
-        const duration = Math.random() * 3 + 2;
-        const color = layer.colors[Math.floor(Math.random() * layer.colors.length)];
-        star.style.cssText = `
-          position: absolute;
-          width: ${size}px; height: ${size}px;
-          left: ${x}%; top: ${y}%;
-          background: ${color};
-          border-radius: 50%;
-          opacity: ${Math.random() * (layer.maxOpacity - layer.minOpacity) + layer.minOpacity};
-          animation: twinkle ${duration}s ease-in-out ${delay}s infinite alternate;
-          box-shadow: 0 0 ${size * 3}px ${color} ${Math.random() * 0.3};
-        `;
-        container.appendChild(star);
-        stars.push({ el: star, x, y, factor: layer.factor });
-      }
-    });
-
-    const style = document.createElement('style');
-    style.textContent = `@keyframes twinkle { 0% { opacity: 0.15; transform: scale(0.8); } 100% { opacity: 0.8; transform: scale(1.2); } }`;
-    document.head.appendChild(style);
-
-    let mx = 0, my = 0;
-    document.addEventListener('mousemove', e => {
-      mx = (e.clientX / window.innerWidth - 0.5) * 2;
-      my = (e.clientY / window.innerHeight - 0.5) * 2;
-    });
-    function animateStars() {
-      for (const s of stars) {
-        s.el.style.transform = `translate(${mx * s.factor * 100}px, ${my * s.factor * 100}px)`;
-      }
-      requestAnimationFrame(animateStars);
-    }
-    animateStars();
-  })();
-
   // scroll progress
   const progressBar = document.getElementById('scroll-progress');
   if (progressBar) {
